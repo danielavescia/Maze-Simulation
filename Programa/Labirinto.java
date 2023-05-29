@@ -29,21 +29,119 @@ public class Labirinto {
 		this.estrutura = estrutura;
 	}
 	
+	
+	public boolean percorreLabirinto() {
+		
+		char [][]labirintoClonado;
+		int [] posicaoInicial = {0, 0};
+		labirintoClonado = (this.estrutura).clone();
+		
+		int [] posicaoSaida = retornaIndicesSaida(labirintoClonado);
+		
+		return percorreLabirinto(labirintoClonado, posicaoInicial, posicaoSaida);
+		
+	}
+	
+	
+	
+	private boolean percorreLabirinto(char [][] labirinto, int []  posicaoInicial, int []  posicaoTestada) {
+		
+		int qntColunas = labirinto[0].length - 1;
+		int qntLinhas = labirinto.length - 1;
+		
 
+			boolean isValidPath = isValidPath(posicaoTestada, labirinto);
+			
+			
+				
+				 
+				   
+
+		
+	}
+		
+		
+	//método recursivo p/ percorrer esquerda esquerda
+	public int[] testaEsquerda(int [] posicaoTestada,int qntLinhas, int qntColunas) {
+		
+		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
+					
+			if(isValidPath(posicaoTestada,this.estrutura)) {
+				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
+				posicaoTestada[1] =  posicaoTestada[1]-1;
+				return testaEsquerda(posicaoTestada, qntLinhas, qntColunas);
+				
+			}
+			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
+		}
+		
+		return posicaoTestada;
+	}
+	
+	public int[] testaDireita(int [] posicaoTestada,int qntLinhas, int qntColunas) {
+		
+		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
+					
+			if(isValidPath(posicaoTestada,this.estrutura)) {
+				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
+				posicaoTestada[1] =  posicaoTestada[1]+1;
+				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
+				
+			}
+			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
+		}
+		
+		return posicaoTestada;
+	}
+	
+	public int[] testaAbaixo(int [] posicaoTestada,int qntLinhas, int qntColunas) {
+		
+		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
+					
+			if(isValidPath(posicaoTestada,this.estrutura)) {
+				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
+				posicaoTestada[0] = posicaoTestada[0]+1;
+				posicaoTestada[1] = posicaoTestada[1]+1 ;
+				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
+				
+			}
+			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
+		}
+		
+		return posicaoTestada;
+	}
+	
+	
+	public int[] testaAcima(int [] posicaoTestada,int qntLinhas, int qntColunas) {
+		
+		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
+					
+			if(isValidPath(posicaoTestada,this.estrutura)) {
+				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
+				posicaoTestada[0] = posicaoTestada[0]-1;
+				posicaoTestada[1] = posicaoTestada[1]-1 ;
+				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
+				
+			}
+			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
+		}
+		return posicaoTestada;
+	}
+	
 	//método recursivo publico que verifica se há saída(char = D) do labirinto. Se há saída retorna a sua posição e se não há retorna -1, -1	
 	public static int[] retornaIndicesSaida(char [][] labirinto) {
-		char saida = 'D';
-		int coluna = labirinto[0].length - 1;
-		int linha = labirinto.length - 1;
+			char saida = 'D';
+			int coluna = labirinto[0].length - 1;
+			int linha = labirinto.length - 1;
 
-		if(labirinto[linha][coluna] == saida) {
-			return new int[] {linha, coluna};
-			
-		} else{
-			return retornaIndicesSaida(labirinto, saida, 0, 0, linha, coluna);
+			if(labirinto[linha][coluna] == saida) {
+				return new int[] {linha, coluna};
+				
+			} else{
+				return retornaIndicesSaida(labirinto, saida, 0, 0, linha, coluna);
+			}
 		}
-	}
-
+		
 	//método que retorna a posicao da saida através de uma busca recursiva em toda a estrutura do array bidimensional
 	private static int[] retornaIndicesSaida(char [][] labirinto,  char saida, int posicaoLinha, int posicaoColuna, int qntLinhas, int qntColunas) {
 
@@ -60,18 +158,24 @@ public class Labirinto {
 		}
 		return new int[] {-1,1};
 	}
-	
-	public static boolean isCaminho(int[] posicao, char [][] labirinto) {
+	//metodo que retorna se a posicao recebida é um caminho válido
+	public static boolean isValidPath(int[] posicao, char [][] labirinto) {
 		
-		if((labirinto[posicao[0]][posicao[1]]  == ' ')) {
-			return true;
-		}
-		
-		return false;
-			
+		int posicaoLinha = posicao[0];
+	    int posicaoColuna = posicao[1];
+	    
+		return labirinto[posicaoLinha][posicaoColuna]  == ' ';	
 	}
 	
-	
+	//metodo que retorna se a posicao recebida está dentro dos limites da matriz
+	public static boolean isPosicaovalida(int[] posicaoTestada, int qntLinhas, int qntColunas) {
+		
+		int posicaoLinha = posicaoTestada[0];
+	    int posicaoColuna = posicaoTestada[1];
+	    
+	    return posicaoLinha >= 0 && posicaoColuna < qntLinhas && posicaoColuna >= 0 && posicaoColuna < qntColunas;
+		
+	}
 	
 
 	//método que que cria um File para ser lido no método criaLabirinto
@@ -87,7 +191,6 @@ public class Labirinto {
 	    return arquivo;
 	}
 	
-
 	public static char[][] criaLabirinto(File arquivo) throws IOException {  
 
 		//inicialização de objetos para ler o arquivo txt e criar o labirinto
