@@ -19,7 +19,8 @@ public class Principal {
 		posicaoSaida = Labirinto.retornaIndicesSaida(labirintoTxt);
 		System.out.println();
 		System.out.println("Posição da saida no array = linha: "+ posicaoSaida[0]+ " e coluna:" + posicaoSaida[1]);
-		
+		System.out.println(Labirinto.percorreLabirinto(labirintoTxt));
+	
 		//System.out.println("linhas:" + labirintoTxt.length + " e " + "colunas"+ labirintoTxt[0].length);
 		//temCaminho = Labirinto.percorreLabirinto(labirintoTxt);
 		//System.out.println(temCaminho);

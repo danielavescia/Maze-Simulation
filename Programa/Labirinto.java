@@ -13,7 +13,7 @@ import java.util.Queue;
  */
 public class Labirinto {
 	//atributo
-	private char [][] estrutura;
+	private  char [][] estrutura;
 
 	//construtor
 	public Labirinto(char [][] estrutura){	
@@ -30,103 +30,68 @@ public class Labirinto {
 	}
 	
 	
-	public boolean percorreLabirinto() {
+	public static boolean percorreLabirinto(char [][] labirinto) {
 		
-		char [][]labirintoClonado;
-		int [] posicaoInicial = {0, 0};
-		labirintoClonado = (this.estrutura).clone();
+		char [][]labirintoClonado = labirinto.clone();
+		labirintoClonado = (labirinto).clone();
 		
 		int [] posicaoSaida = retornaIndicesSaida(labirintoClonado);
+		int posicaoLinha = posicaoSaida[0];
+		int posicaoColuna = posicaoSaida[1];
 		
-		return percorreLabirinto(labirintoClonado, posicaoInicial, posicaoSaida);
+		return percorreLabirinto(labirintoClonado, 0, 1);
 		
 	}
 	
-	
-	
-	private boolean percorreLabirinto(char [][] labirinto, int []  posicaoInicial, int []  posicaoTestada) {
-		
-		int qntColunas = labirinto[0].length - 1;
-		int qntLinhas = labirinto.length - 1;
-		
 
-			boolean isValidPath = isValidPath(posicaoTestada, labirinto);
+	private static boolean percorreLabirinto(char [][] labirintoClonado, int posicaoLinha, int posicaoColuna ) {
+		
+		int qntColunas = labirintoClonado[0].length - 1;
+		int qntLinhas = labirintoClonado.length - 1;
+		
+		
+      
+		while(isPosicaovalida(posicaoLinha, posicaoColuna, qntLinhas, qntColunas)){       
 			
 			
-				
-				 
-				   
-
+				if (labirintoClonado[posicaoLinha][posicaoColuna] == 'D') { // Condição de parada 1   
+					return true;
+		        
+				} else {
+					
+					//teste posicao a Esquerda
+			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)){
+			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
+			            return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna - 1);
+			        }
+	
+			        // teste posicao a cima
+			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)){
+			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
+			            return percorreLabirinto(labirintoClonado, posicaoLinha - 1, posicaoColuna);
+			        }
+	
+			        // teste posicao a direita
+			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)) {
+			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
+			            return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna + 1);
+			        }
+	
+			        //teste posicao a baixo
+			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)) {
+			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
+			        	return percorreLabirinto(labirintoClonado, posicaoLinha +1 , posicaoColuna);
+			        }
+				}
+		}
+		
+		return false;
 		
 	}
 		
 		
 	//método recursivo p/ percorrer esquerda esquerda
-	public int[] testaEsquerda(int [] posicaoTestada,int qntLinhas, int qntColunas) {
-		
-		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
-					
-			if(isValidPath(posicaoTestada,this.estrutura)) {
-				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
-				posicaoTestada[1] =  posicaoTestada[1]-1;
-				return testaEsquerda(posicaoTestada, qntLinhas, qntColunas);
-				
-			}
-			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
-		}
-		
-		return posicaoTestada;
-	}
 	
-	public int[] testaDireita(int [] posicaoTestada,int qntLinhas, int qntColunas) {
-		
-		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
-					
-			if(isValidPath(posicaoTestada,this.estrutura)) {
-				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
-				posicaoTestada[1] =  posicaoTestada[1]+1;
-				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
-				
-			}
-			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
-		}
-		
-		return posicaoTestada;
-	}
-	
-	public int[] testaAbaixo(int [] posicaoTestada,int qntLinhas, int qntColunas) {
-		
-		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
-					
-			if(isValidPath(posicaoTestada,this.estrutura)) {
-				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
-				posicaoTestada[0] = posicaoTestada[0]+1;
-				posicaoTestada[1] = posicaoTestada[1]+1 ;
-				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
-				
-			}
-			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
-		}
-		
-		return posicaoTestada;
-	}
-	
-	
-	public int[] testaAcima(int [] posicaoTestada,int qntLinhas, int qntColunas) {
-		
-		while(isPosicaovalida(posicaoTestada, qntLinhas, qntColunas)) {
-					
-			if(isValidPath(posicaoTestada,this.estrutura)) {
-				estrutura[posicaoTestada[0]][posicaoTestada[1]] = '.';
-				posicaoTestada[0] = posicaoTestada[0]-1;
-				posicaoTestada[1] = posicaoTestada[1]-1 ;
-				return testaDireita(posicaoTestada, qntLinhas, qntColunas);
-				
-			}
-			estrutura[posicaoTestada[0]][posicaoTestada[1]] = 'X';
-		}
-		return posicaoTestada;
-	}
 	
 	//método recursivo publico que verifica se há saída(char = D) do labirinto. Se há saída retorna a sua posição e se não há retorna -1, -1	
 	public static int[] retornaIndicesSaida(char [][] labirinto) {
@@ -159,21 +124,19 @@ public class Labirinto {
 		return new int[] {-1,1};
 	}
 	//metodo que retorna se a posicao recebida é um caminho válido
-	public static boolean isValidPath(int[] posicao, char [][] labirinto) {
+	public static boolean isValidPath(int posicaoLinha, int posicaoColuna, char [][] labirinto) {
 		
-		int posicaoLinha = posicao[0];
-	    int posicaoColuna = posicao[1];
-	    
-		return labirinto[posicaoLinha][posicaoColuna]  == ' ';	
+		if(Character.isWhitespace(labirinto[posicaoLinha][posicaoColuna]) || labirinto[posicaoLinha][posicaoColuna] == '.') {
+			return true;
+		}
+		
+	    return false; 
 	}
 	
 	//metodo que retorna se a posicao recebida está dentro dos limites da matriz
-	public static boolean isPosicaovalida(int[] posicaoTestada, int qntLinhas, int qntColunas) {
-		
-		int posicaoLinha = posicaoTestada[0];
-	    int posicaoColuna = posicaoTestada[1];
-	    
-	    return posicaoLinha >= 0 && posicaoColuna < qntLinhas && posicaoColuna >= 0 && posicaoColuna < qntColunas;
+	public static boolean isPosicaovalida(int posicaoLinha, int posicaoColuna,  int qntLinhas, int qntColunas) {
+
+	    return posicaoLinha >= 0 && posicaoLinha <= qntLinhas && posicaoColuna >= 0 && posicaoColuna <= qntColunas;
 		
 	}
 	
