@@ -44,13 +44,4 @@ public class TesteUnidadeLabirinto {
         assertArrayEquals(posicaoEsperada, posicaoAtual);
     }
     
- // Teste para verificar se método isValid verfica corretamente se a posicao possui caracter de ' '(caminho livre não testado) .
-    @Test
-    public void testeIsValid() {
-    	char [][] labirinto = {{'X','F','F', 'X', 'D', 'X'}, {'X', 'X', 'X',' ', 'X', 'X'},{'X', 'F', 'C','X', 'D', 'D'}};
-        int[] posicaoTestada = {1, 3};
-        boolean retornoObtido = Labirinto.isValid(posicaoTestada,labirinto);
-        boolean retornoEsperado = true;
-        Assertions.assertEquals(retornoEsperado, retornoObtido);
-    }
 }

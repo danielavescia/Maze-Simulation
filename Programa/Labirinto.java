@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -13,85 +14,100 @@ import java.util.Queue;
  */
 public class Labirinto {
 	//atributo
-	private  char [][] estrutura;
-
-	//construtor
-	public Labirinto(char [][] estrutura){	
-		this.estrutura = estrutura;	
+	private static final char LIVRE = ' ';
+	private static final char PAREDE = 'X';
+	private static final char TESTADO = '*';
+	private static final char SAIDA = 'D';
+	private static char[][] labirinto;
+	
+	//métodos de acesso
+	public static char[][] getLabirinto() {
+		return labirinto;
 	}
 
-	//propriedade
-	public char [][] getEstrutura() {
-		return estrutura;
+	public static void setLabirinto(char[][] labirinto) {
+		Labirinto.labirinto = labirinto;
 	}
 
-	public void setEstrutura(char [][] estrutura) {
-		this.estrutura = estrutura;
+	public static char getLivre() {
+		return LIVRE;
 	}
-	
-	
-	public static boolean percorreLabirinto(char [][] labirinto) {
-		
-		char [][]labirintoClonado = labirinto.clone();
-		labirintoClonado = (labirinto).clone();
-		
-		int [] posicaoSaida = retornaIndicesSaida(labirintoClonado);
-		int posicaoLinha = posicaoSaida[0];
-		int posicaoColuna = posicaoSaida[1];
-		
-		return percorreLabirinto(labirintoClonado, 0, 1);
-		
-	}
-	
 
-	private static boolean percorreLabirinto(char [][] labirintoClonado, int posicaoLinha, int posicaoColuna ) {
-		
-		int qntColunas = labirintoClonado[0].length - 1;
-		int qntLinhas = labirintoClonado.length - 1;
-		
-		
-      
-		while(isPosicaovalida(posicaoLinha, posicaoColuna, qntLinhas, qntColunas)){       
-			
-			
-				if (labirintoClonado[posicaoLinha][posicaoColuna] == 'D') { // Condição de parada 1   
-					return true;
-		        
-				} else {
-					
-					//teste posicao a Esquerda
-			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)){
-			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
-			            return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna - 1);
-			        }
-	
-			        // teste posicao a cima
-			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)){
-			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
-			            return percorreLabirinto(labirintoClonado, posicaoLinha - 1, posicaoColuna);
-			        }
-	
-			        // teste posicao a direita
-			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)) {
-			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
-			            return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna + 1);
-			        }
-	
-			        //teste posicao a baixo
-			        if (isValidPath(posicaoLinha, posicaoColuna, labirintoClonado)) {
-			        	labirintoClonado[posicaoLinha][posicaoColuna] = '.';
-			        	return percorreLabirinto(labirintoClonado, posicaoLinha +1 , posicaoColuna);
-			        }
-				}
-		}
-		
-		return false;
-		
+	public static char getParede() {
+		return PAREDE;
 	}
-		
-		
-	//método recursivo p/ percorrer esquerda esquerda
+
+	public static char getTestado() {
+		return TESTADO;
+	}
+
+	public static char getSaida() {
+		return SAIDA;
+	}
+
+	public static boolean percorreLabirinto(char[][] labirinto) {
+	    char[][] labirintoClonado = clonaLabirinto(labirinto);
+	    int[] posicaoSaida = retornaIndicesSaida(labirintoClonado);
+	    int posicaoLinha = posicaoSaida[0];
+	    int posicaoColuna = posicaoSaida[1];
+	    List<String> tentativas = new ArrayList<>();
+	    return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna, tentativas);
+	}
+
+	private static boolean percorreLabirinto(char[][] labirintoClonado, int posicaoLinha, int posicaoColuna, List<String> tentativas) {
+	    int qntColunas = labirintoClonado[0].length;
+	    int qntLinhas = labirintoClonado.length;
+
+	    if (posicaoLinha == 0 && posicaoColuna == 0) {
+	        return true;
+	    }
+	    
+	    if (!isPosicaovalida(posicaoLinha, posicaoColuna, qntLinhas, qntColunas) || labirintoClonado[posicaoLinha][posicaoColuna] == TESTADO || labirintoClonado[posicaoLinha][posicaoColuna] == PAREDE) {
+	        return false;
+	    }
+
+	    labirintoClonado[posicaoLinha][posicaoColuna] = TESTADO; // Marcando a posição como visitada
+
+	    exibirLabirinto(labirintoClonado); // Exibir labirinto atualizado
+	    wait(600);
+
+	    // Movimento para a esquerda
+	    if (percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna - 1, tentativas)) {
+	        return true;
+	    }
+	    // Movimento para cima
+	    if (percorreLabirinto(labirintoClonado, posicaoLinha - 1, posicaoColuna, tentativas)) {
+	        return true;
+	    }
+	    // Movimento para a direita
+	    if (percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna + 1, tentativas)) {
+	        return true;
+	    }
+	    // Movimento para baixo
+	    if (percorreLabirinto(labirintoClonado, posicaoLinha + 1, posicaoColuna, tentativas)) {
+	        return true;
+	    }
+
+	    labirintoClonado[posicaoLinha][posicaoColuna] = LIVRE; // Removendo a marcação da posição
+	    exibirLabirinto(labirintoClonado); // Exibir labirinto atualizado
+	    return false;
+	}
 	
+    private static char[][] clonaLabirinto(char[][] labirinto) {
+        char[][] labirintoClonado = new char[labirinto.length][labirinto[0].length];
+        for (int i = 0; i < labirinto.length; i++) {
+            labirintoClonado[i] = labirinto[i].clone();
+        }
+        return labirintoClonado;
+	    }
+    
+    private static void wait(int milissegundos) {
+        try {
+            Thread.sleep(milissegundos);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 	
 	//método recursivo publico que verifica se há saída(char = D) do labirinto. Se há saída retorna a sua posição e se não há retorna -1, -1	
 	public static int[] retornaIndicesSaida(char [][] labirinto) {
@@ -123,15 +139,7 @@ public class Labirinto {
 		}
 		return new int[] {-1,1};
 	}
-	//metodo que retorna se a posicao recebida é um caminho válido
-	public static boolean isValidPath(int posicaoLinha, int posicaoColuna, char [][] labirinto) {
-		
-		if(Character.isWhitespace(labirinto[posicaoLinha][posicaoColuna]) || labirinto[posicaoLinha][posicaoColuna] == '.') {
-			return true;
-		}
-		
-	    return false; 
-	}
+	
 	
 	//metodo que retorna se a posicao recebida está dentro dos limites da matriz
 	public static boolean isPosicaovalida(int posicaoLinha, int posicaoColuna,  int qntLinhas, int qntColunas) {
@@ -140,6 +148,15 @@ public class Labirinto {
 		
 	}
 	
+	private static void exibirLabirinto(char[][] labirinto) {
+	    for (int i = 0; i < labirinto.length; i++) {
+	        for (int j = 0; j < labirinto[i].length; j++) {
+	            System.out.print(labirinto[i][j] + " ");
+	        }
+	        System.out.println();
+	    }
+	    System.out.println();
+	}
 
 	//método que que cria um File para ser lido no método criaLabirinto
 	public static File caminhoArquivo() throws FileNotFoundException {
@@ -154,8 +171,13 @@ public class Labirinto {
 	    return arquivo;
 	}
 	
-	public static char[][] criaLabirinto(File arquivo) throws IOException {  
-
+	public static char[][] criaLabirinto(File arquivo) throws IOException, IllegalArgumentException {  
+		
+		if(!arquivo.exists()){
+			throw new IllegalArgumentException();
+		}
+		
+		else {
 		//inicialização de objetos para ler o arquivo txt e criar o labirinto
 		BufferedReader br = new BufferedReader(new FileReader(arquivo));
 		String [] conteudoArquivo;
@@ -186,14 +208,15 @@ public class Labirinto {
 
 			br.close();
 
-		} catch(IOException e) {
-
-			e.getMessage();	
+		} finally {
+			br.close();
 		}
-
-		return labirintoTxt;	
+		
+		return labirintoTxt;
+		}	
 
 	}
+	
 
 	public static char [][] criarMatrizChar(int qntLinhas, ArrayList<Character> listaChar) throws FileNotFoundException{
 
