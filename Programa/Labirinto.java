@@ -17,7 +17,6 @@ public class Labirinto {
 	private static final char LIVRE = ' ';
 	private static final char PAREDE = 'X';
 	private static final char TESTADO = '*';
-	private static final char SAIDA = 'D';
 	private static char[][] labirinto;
 	
 	//métodos de acesso
@@ -41,16 +40,17 @@ public class Labirinto {
 		return TESTADO;
 	}
 
-	public static char getSaida() {
-		return SAIDA;
-	}
 
 	public static boolean percorreLabirinto(char[][] labirinto) {
-	    char[][] labirintoClonado = clonaLabirinto(labirinto);
+	    
+		char[][] labirintoClonado = clonaLabirinto(labirinto);
 	    int[] posicaoSaida = retornaIndicesSaida(labirintoClonado);
 	    int posicaoLinha = posicaoSaida[0];
 	    int posicaoColuna = posicaoSaida[1];
 	    List<String> tentativas = new ArrayList<>();
+	    System.out.printf("LABIRINTO FORNECIDO: /n");
+	    imprimeLabirinto(labirinto);
+	    System.out.printf(" CHECANDO CAMINHO ATÉ ENTRADA... /n");
 	    return percorreLabirinto(labirintoClonado, posicaoLinha, posicaoColuna, tentativas);
 	}
 
@@ -65,10 +65,10 @@ public class Labirinto {
 	    if (!isPosicaovalida(posicaoLinha, posicaoColuna, qntLinhas, qntColunas) || labirintoClonado[posicaoLinha][posicaoColuna] == TESTADO || labirintoClonado[posicaoLinha][posicaoColuna] == PAREDE) {
 	        return false;
 	    }
-
+	    
 	    labirintoClonado[posicaoLinha][posicaoColuna] = TESTADO; // Marcando a posição como visitada
 
-	    exibirLabirinto(labirintoClonado); // Exibir labirinto atualizado
+	    imprimeLabirinto(labirintoClonado); // Exibir labirinto atualizado
 	    wait(600);
 
 	    // Movimento para a esquerda
@@ -89,7 +89,7 @@ public class Labirinto {
 	    }
 
 	    labirintoClonado[posicaoLinha][posicaoColuna] = LIVRE; // Removendo a marcação da posição
-	    exibirLabirinto(labirintoClonado); // Exibir labirinto atualizado
+	    imprimeLabirinto(labirintoClonado); // Exibir labirinto atualizado
 	    return false;
 	}
 	
@@ -144,18 +144,8 @@ public class Labirinto {
 	//metodo que retorna se a posicao recebida está dentro dos limites da matriz
 	public static boolean isPosicaovalida(int posicaoLinha, int posicaoColuna,  int qntLinhas, int qntColunas) {
 
-	    return posicaoLinha >= 0 && posicaoLinha <= qntLinhas && posicaoColuna >= 0 && posicaoColuna <= qntColunas;
+		 return posicaoLinha >= 0 && posicaoLinha < qntLinhas && posicaoColuna >= 0 && posicaoColuna < qntColunas;
 		
-	}
-	
-	private static void exibirLabirinto(char[][] labirinto) {
-	    for (int i = 0; i < labirinto.length; i++) {
-	        for (int j = 0; j < labirinto[i].length; j++) {
-	            System.out.print(labirinto[i][j] + " ");
-	        }
-	        System.out.println();
-	    }
-	    System.out.println();
 	}
 
 	//método que que cria um File para ser lido no método criaLabirinto
@@ -245,15 +235,16 @@ public class Labirinto {
 
 	//imprime o array bidimensional de char
 	public static void imprimeLabirinto(char [][] labirintoTxt) {
-
+		
 		for(int i = 0; i < labirintoTxt.length; i++) {
 			for(int j = 0; j < labirintoTxt[i].length; j++) {
 
 				if(j==0) {
 					System.out.println();
 				}
-				System.out.print(labirintoTxt[i][j]);
+				System.out.print(labirintoTxt[i][j]+ " ");
 			}	
 		}
+		System.out.println();
 	}
 }
