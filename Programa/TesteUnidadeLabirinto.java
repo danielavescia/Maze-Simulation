@@ -1,7 +1,7 @@
 
 
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.Assert.assertEquals;
 import org.junit.jupiter.api.Test;
 
 public class TesteUnidadeLabirinto {
@@ -35,13 +35,55 @@ public class TesteUnidadeLabirinto {
         assertArrayEquals(posicaoEsperada, posicaoAtual);
     }
     
- // Teste em matriz que não possui saida(representado pelo char D) 
     @Test
-    public void testeQuatroRetornaIndiceSaida() {
-    	char [][]labirinto = {{' ','X','X', 'X', ' ', 'X'}, {'X', ' ', 'X','X', ' ', 'X'},{'X', ' ', ' ','X', ' ', 'X'},{'X', ' ', 'X', ' ', 'X', 'X'},{' ', ' ', ' ', 'X', ' ', 'X'}};
-        int[] posicaoEsperada = {-1, -1};
-        int[] posicaoAtual = Labirinto.retornaIndicesSaida(labirinto);
-        assertArrayEquals(posicaoEsperada, posicaoAtual);
+    public void testeProgramaUm() {
+    boolean expected = true;
+    
+    char[][] labirinto2 = {
+		    {' ', 'X', 'X', 'X', 'X', 'X'},
+		    {' ', ' ', ' ', ' ', ' ', 'X'},
+		    {'X', 'X', 'X', 'X', ' ', 'X'},
+		    {'X', ' ', ' ', 'X', ' ', 'X'},
+		    {'X', 'X', ' ', 'D', ' ', 'X'},
+		    {'X', 'X', 'X', 'X', 'X', 'X'}
+		};
+	
+	System.out.println();
+	boolean returned = Labirinto.percorreLabirinto(labirinto2);
+	assertEquals(expected, returned);
     }
     
+    @Test
+    public void testeProgramaDois() {
+    boolean expected = false;
+	char[][] labirinto3 = {
+		    {'X', ' ', 'X', 'X', 'X'},
+		    {'X', ' ', 'X', ' ', 'X'},
+		    {'X', ' ', 'X', ' ', 'X'},
+		    {'X', ' ', 'X', ' ', 'X'},
+		    {'X', 'X', 'X', 'X', 'X'}
+		};
+	
+	boolean returned = Labirinto.percorreLabirinto(labirinto3);
+	assertEquals(expected, returned);
+    }
+    
+    @Test
+    public void testeProgramaTres() {
+    boolean expected = true;
+	char [][] labirinto4 = {		 
+			{' ', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'},
+		    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X'},
+		    {'X', 'X', 'X', ' ', 'X', ' ', 'X', ' ', 'X', 'X', 'X', ' ', ' ', ' ', ' ', 'X', 'X', 'X'},
+		    {'X', 'X', 'X', 'X', ' ', ' ', 'X', ' ', 'X', 'X', 'X', ' ', 'X', 'X', ' ', 'X', 'X', 'X'},
+		    {'X', 'X', 'X', 'X', 'X', 'X', 'X', ' ', 'X', 'X', 'X', ' ', 'X', 'X', ' ', ' ', 'X', 'X'},
+		    {'X', 'X', 'X', 'X', 'X', 'X', 'X', ' ', ' ', ' ', ' ', ' ', 'X', ' ', 'X', ' ', 'X', 'X'},
+		    {'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', ' ', 'X', 'X', ' ', 'X', ' ', ' ', ' ', ' ', ' '},
+		    {'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', ' ', ' ', ' ', ' ', 'X', ' ', ' ', 'X', 'X', 'D'}
+	};
+	
+	boolean returned = Labirinto.percorreLabirinto(labirinto4);
+	assertEquals(expected, returned);
+    
+    }
 }
